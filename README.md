@@ -1,1 +1,3 @@
-# Brainrot
+# HuzzHub
+
+Find huzz near you!
