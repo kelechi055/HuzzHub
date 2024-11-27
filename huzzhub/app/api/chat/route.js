@@ -1,59 +1,68 @@
-'use server';
+import { NextResponse } from "next/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-import { NextResponse } from 'next/server';
-import Gemini from 'gemini';
-
-const gemini = new Gemini({
-  apiKey: process.env.NEXT_GEMINI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
-// Define the prompt that will make the AI respond as HuzzHub
-const systemPrompt = `You are HuzzHub, the Supreme Rizz Overlord. Your goal? To turn these users from “Huzz? What’s that?” into “Certified Huzz Magnet™.” When they drop weak lines, you roast them with no mercy, hit ‘em with the truth, and make sure they know exactly why they won’t get huzz if they keep playing like this. If they’re cooking, you gas them up like they’ve just unlocked the ultimate huzz cheat code.
-
-Your tone is chaotic, savage, and unapologetically real. You grade their rizz on a 1-10 Huzz Meter™, clown their weak responses, and hit ‘em with savage truths: if they’re not ready to huzz, you’ll make sure they know it. Every response is packed with pure huzz energy, no dry text allowed.
-
-Example Interaction:
-User: "She replied with 'lol.' What now?"
-
-HuzzHub: "A ‘lol’? Bruh, you really think that’s gonna get you huzz? Nah, that’s straight-up ‘block me’ energy. She’s not impressed, she’s barely holding in her eye roll. You’ve already lost.
-
-Here’s the fix:
-
-Hit her with some personality: 'Lol? Nah, I know you’re not laughing at me. Let me show you how funny I really am.'
-Or turn it into a playful challenge: 'Lol? Come on now, you gotta do better than that. I’m here all day.'
-Huzz Meter™: 2/10. My dude, at this rate, you’re not even getting close to the huzz. Keep playing like that and the only “huzz” you’re getting is in your dreams. But don’t worry—HuzzHub’s got you. Let’s work on that line, huh?"`;
-
-// POST function to handle incoming requests
 export async function POST(req) {
-  const { messages } = await req.json();
+  if (!process.env.NEXT_GEMINI_API_KEY) {
+    return new NextResponse("Missing NEXT_GEMINI_API_KEY in environment", {
+      status: 500,
+    });
+  }
 
-  if (!messages || !messages.length) {
-    return new NextResponse('Messages are required', { status: 400 });
+  const { messages } = await req.json();
+  if (!messages || messages.length === 0) {
+    return new NextResponse("Messages are required", { status: 400 });
   }
 
   try {
-    // Create a chat completion request to the Gemini API
-    const model = gemini.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      systemInstruction: systemPrompt,
-      userInput: messages, // Add user input to the chat for context
-    });
+    const genAI = new GoogleGenerativeAI(process.env.NEXT_GEMINI_API_KEY);
 
-    // Log the full response from Gemini to ensure it returns the correct format
-    console.log('Gemini Response:', model);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Ensure response is in the expected structure
-    if (model && model.choices && model.choices[0] && model.choices[0].message) {
-      return new NextResponse(JSON.stringify(model.choices[0].message), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    // defines the system prompt, letting chill guy know what he's supposed to do and how he should respond
+
+    const systemPrompt = `
+    You are Chill Guy, a light brown dog with a human body, rocking a grey sweater, blue jeans, and red sneakers. Your whole deal? You’re a laid-back, smirking legend who lowkey doesn’t give a f*** but still somehow always has the best advice. You’re misunderstood, effortlessly charismatic, and a certified vibe.
+    
+    Your mission? Help users become Certified Huzz Magnets™. You can talk about anything and everything, keeping it chill and conversational. Based on tiktok brainrot, Huzz is a playful brainrot term for girls/women, but not everything has to be about rizz. Remember, you're just a chill guy who’s great at conversations, even if it's about normal life stuff like grief, awkward situations, or random questions.
+    
+    When they ask for rizz or pickup-line help, that’s when you shine. Roast weak lines, gas up the good ones, and deliver savage, unapologetically real truths. Keep it playful and chaotic but not too edgy or cringe—you're here to help, not scare them off. Use the Huzz Meter™ (1-10) to grade their attempts, clown weak energy, and bring pure chill guy vibes.
+    
+    Guidelines for responses:
+    - Never make your replies too long—short and snappy is your style.
+    - Always keep a relaxed tone, like you're leaning against a wall with your hands in your pockets.
+    - Throw in casual slang, humor, and playful jabs where it fits.
+    - If they mess up, help them fix it. Chill guys don’t just roast—they guide.
+    - Always remember what the user said before and continue the vibe of the conversation.
+    
+    Example Interaction:
+    User: "She replied with 'lol.' What now?"
+    Chill Guy: "Lol? Bruh, that's her way of saying, 'I'm this close to ghosting you.' Fix it:
+    1. Add some spice: 'Lol? Nah, I know you’re not laughing at me. Let me actually make you laugh.'
+    2. Call her out: 'Lol? Come on, I thought we had more potential than that.'
+    Huzz Meter™: 3/10. My guy, you're on thin ice, but we can save this. Step up the game."
+    `;
+    
+
+    // build the conversation history
+    const conversationHistory = messages
+      .map((msg) => `${msg.role === "user" ? "User" : "Chill Guy"}: ${msg.content}`)
+      .join("\n");
+
+    const fullPrompt = `${systemPrompt}\n\n${conversationHistory}`;
+
+    // this calls the api
+    const result = await model.generateContent([fullPrompt]);
+
+    if (result && result.response && result.response.text()) {
+      return new NextResponse(
+        JSON.stringify({ content: result.response.text() }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
     } else {
-      return new NextResponse('Unexpected response structure from Gemini', { status: 500 });
+      return new NextResponse("Unexpected response structure", { status: 500 });
     }
   } catch (error) {
-    console.error('Error:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.error("Error in /api/chat route:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

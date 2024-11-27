@@ -1,6 +1,6 @@
 'use client';
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
-import Sidebar from '../components/sidebar'; // Correct path with lowercase 'sidebar'
+import Sidebar from '../components/sidebar'; 
 import {
   Box,
   Stack,
@@ -38,7 +38,7 @@ export default function Home() {
     {
       role: "assistant",
       content:
-        "Hello! I'm the HuzzHub Assistant. How can I assist you today? Whether it's about our platform, tech, or anything else, feel free to ask!",
+        "Chill Guy: Hello! I'm just a chill guy, the HuzzHub Assistant. How can I assist you today? Whether it's about our platform, rizz, the huzz, bruzz, anything! feel free to ask!",
     },
   ]);
 
@@ -46,32 +46,37 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const sendMessage = async () => {
-    if (!message.trim()) return; // Prevent sending empty messages
-
-    const updatedMessages = [...messages, { role: "user", content: message }];
+    if (!message.trim()) return; //no empty messages !!!
+  
+    const updatedMessages = [
+      ...messages, 
+      { role: "user", content: message }, 
+      { role: "assistant", content: "..." } // for when chill guy is thinking or about to respond
+    ];
+    
     setMessages(updatedMessages);
-    setMessage("");
-
+    setMessage(""); 
+  
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: updatedMessages }),
+        body: JSON.stringify({ messages: updatedMessages.slice(0, -1) }), 
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch");
-      }
-
+  
       const result = await response.json();
       setMessages((prevMessages) => [
-        ...prevMessages.slice(0, -1), // Remove the placeholder for the assistant
-        { role: "assistant", content: result.content },
+        ...prevMessages.slice(0, -1), 
+        { role: "assistant", content: result.content }, 
       ]);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching AI response:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages.slice(0, -1), 
+        { role: "assistant", content: "Error fetching response. Please try again." },
+      ]);
     }
   };
 
@@ -122,27 +127,42 @@ export default function Home() {
               overflow="auto"
               maxHeight="100%"
             >
-              {messages.map((msg, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  justifyContent={
-                    msg.role === "assistant" ? "flex-start" : "flex-end"
-                  }
-                >
+           {/* MESSAGE DISPLAY BOX (PFP, ETC) */}   
+            {messages.map((msg, index) => (
+              <Box
+                key={index}
+                display="flex"
+                justifyContent={msg.role === "assistant" ? "flex-start" : "flex-end"}
+                alignItems="center"
+                sx={{ marginBottom: 2 }}
+              >
+                {msg.role === "assistant" && (
                   <Box
-                    bgcolor={
-                      msg.role === "assistant"
-                        ? "primary.main"
-                        : "secondary.main"
-                    }
-                    color={msg.role === "assistant" ? "white" : "black"}
-                    borderRadius={16}
-                    p={3}
-                  >
-                    {msg.content}
-                  </Box>
+                    component="img"
+                    src="/chillguypfp.png"
+                    alt="Chill Guy"
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      marginRight: 1, 
+                    }}
+                  />
+                )}
+                <Box
+                  bgcolor={
+                    msg.role === "assistant"
+                      ? "primary.main"
+                      : "secondary.main"
+                  }
+                  color={msg.role === "assistant" ? "white" : "black"}
+                  borderRadius={16}
+                  p={3}
+                  sx={{ maxWidth: "75%" }} 
+                >
+                  {msg.content}
                 </Box>
+              </Box> 
               ))}
             </Stack>
             <Stack direction="row" spacing={2}>
