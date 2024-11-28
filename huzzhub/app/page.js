@@ -1,4 +1,5 @@
 'use client';
+
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import Sidebar from '../components/sidebar'; 
 import {
@@ -8,8 +9,10 @@ import {
   Button,
   createTheme,
   ThemeProvider,
+  IconButton,
 } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
+import MenuIcon from '@mui/icons-material/Menu'; // Importing Menu icon
 import { useState } from "react";
 
 const LakersTheme = createTheme({
@@ -46,17 +49,17 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const sendMessage = async () => {
-    if (!message.trim()) return; //no empty messages !!!
-  
+    if (!message.trim()) return;
+
     const updatedMessages = [
       ...messages, 
       { role: "user", content: message }, 
-      { role: "assistant", content: "..." } // for when chill guy is thinking or about to respond
+      { role: "assistant", content: "..." }
     ];
-    
+
     setMessages(updatedMessages);
-    setMessage(""); 
-  
+    setMessage("");
+
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -65,7 +68,7 @@ export default function Home() {
         },
         body: JSON.stringify({ messages: updatedMessages.slice(0, -1) }), 
       });
-  
+
       const result = await response.json();
       setMessages((prevMessages) => [
         ...prevMessages.slice(0, -1), 
@@ -87,15 +90,29 @@ export default function Home() {
         onClose={() => setSidebarOpen(false)}
         messages={messages}
       />
+
       <Box
-        width="calc(100vw - 16px)"
-        height="calc(100vh - 16px)"
+        width="100%"
+        height="100vh"
         display="flex"
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
         sx={{ background: LakersTheme.palette.gradients.primary }}
       >
+        {/* Menu icon at the top-left corner */}
+        <IconButton
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          sx={{
+            position: "absolute",
+            top: "16px",
+            left: "16px",
+            color: "white",
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+
         <Box display="flex" flexDirection="row" alignItems="center">
           <Box
             sx={{
@@ -127,44 +144,44 @@ export default function Home() {
               overflow="auto"
               maxHeight="100%"
             >
-           {/* MESSAGE DISPLAY BOX (PFP, ETC) */}   
-            {messages.map((msg, index) => (
-              <Box
-                key={index}
-                display="flex"
-                justifyContent={msg.role === "assistant" ? "flex-start" : "flex-end"}
-                alignItems="center"
-                sx={{ marginBottom: 2 }}
-              >
-                {msg.role === "assistant" && (
-                  <Box
-                    component="img"
-                    src="/chillguypfp.png"
-                    alt="Chill Guy"
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      marginRight: 1, 
-                    }}
-                  />
-                )}
+              {messages.map((msg, index) => (
                 <Box
-                  bgcolor={
-                    msg.role === "assistant"
-                      ? "primary.main"
-                      : "secondary.main"
-                  }
-                  color={msg.role === "assistant" ? "white" : "black"}
-                  borderRadius={16}
-                  p={3}
-                  sx={{ maxWidth: "75%" }} 
+                  key={index}
+                  display="flex"
+                  justifyContent={msg.role === "assistant" ? "flex-start" : "flex-end"}
+                  alignItems="center"
+                  sx={{ marginBottom: 2 }}
                 >
-                  {msg.content}
-                </Box>
-              </Box> 
+                  {msg.role === "assistant" && (
+                    <Box
+                      component="img"
+                      src="/chillguypfp.png"
+                      alt="Chill Guy"
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        marginRight: 1, 
+                      }}
+                    />
+                  )}
+                  <Box
+                    bgcolor={
+                      msg.role === "assistant"
+                        ? "primary.main"
+                        : "secondary.main"
+                    }
+                    color={msg.role === "assistant" ? "white" : "black"}
+                    borderRadius={16}
+                    p={3}
+                    sx={{ maxWidth: "75%" }} 
+                  >
+                    {msg.content}
+                  </Box>
+                </Box> 
               ))}
             </Stack>
+
             <Stack direction="row" spacing={2}>
               <TextField
                 label="Message"

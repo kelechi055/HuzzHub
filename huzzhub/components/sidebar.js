@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer, List, ListItem, ListItemText, Divider, IconButton, Box, SvgIcon } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, Divider, IconButton, Box, SvgIcon, Button } from '@mui/material';
 import Image from 'next/image';
 
 const GitHubIcon = () => (
@@ -8,14 +8,22 @@ const GitHubIcon = () => (
   </SvgIcon>
 );
 
-const Sidebar = ({ open, onClose, messages }) => {
+const Sidebar = ({ open, onClose, messages, clearMessages, chatSummary }) => {
   return (
     <Drawer
       variant="persistent"
       anchor="left"
       open={open}
       onClose={onClose}
-      sx={{ width: 240, flexShrink: 0, '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box' } }}
+      sx={{
+        width: 240,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: 240,
+          boxSizing: 'border-box',
+          backgroundColor: '#f5f5f5', // Light gray background for better readability
+        },
+      }}
     >
       <List>
         <ListItem button onClick={onClose}>
@@ -38,27 +46,43 @@ const Sidebar = ({ open, onClose, messages }) => {
         <ListItem>
           <Box display="flex" alignItems="center">
             <Image src="/chatgpt-app/chatgpt-logo.png" alt="ChatGPT Logo" width={24} height={24} />
-            <ListItemText primary="Chat History" sx={{ marginLeft: 1 }} />
+            <ListItemText primary="Chat Summary" sx={{ marginLeft: 1, color: '#333' }} />
           </Box>
         </ListItem>
         <Divider />
-        {messages.map((msg, index) => (
-          <React.Fragment key={index}>
-            <ListItem>
-              <Box
-                bgcolor={msg.role === 'assistant' ? 'primary.main' : 'secondary.main'}
-                color="white"
-                borderRadius={16}
-                p={3}
-                width="100%"
-                sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
-              >
-                {msg.content}
-              </Box>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        ))}
+        <ListItem>
+          <Box
+            bgcolor="#e0e0e0" // Light background for contrast
+            color="#333" // Darker text color
+            borderRadius={8}
+            p={2}
+            width="100%"
+            sx={{
+              fontSize: '0.9rem', // Readable font size
+              textAlign: 'center',
+            }}
+          >
+            {chatSummary || "No chat summary available."} {/* Show chat summary or placeholder */}
+          </Box>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={clearMessages}
+            sx={{
+              width: '100%',
+              backgroundColor: '#1976d2', // Primary blue color
+              color: '#fff',
+              '&:hover': {
+                backgroundColor: '#115293', // Darker blue on hover
+              },
+            }}
+          >
+            Clear Chat
+          </Button>
+        </ListItem>
       </List>
     </Drawer>
   );
