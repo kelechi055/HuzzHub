@@ -9,6 +9,17 @@ const GitHubIcon = () => (
 );
 
 const Sidebar = ({ open, onClose, messages, clearMessages, chatSummary }) => {
+  const generateSummary = () => {
+    // Filter out the initial system prompt message
+    const userMessages = messages.filter(message => message.sender !== 'Chill Guy');
+    
+    // If there are user messages, take the first one as the summary
+    const summary = userMessages.length > 0 ? userMessages[0].content : "No summary available.";
+    
+    // Truncate if the summary is too long
+    return summary.length > 80 ? summary.substring(0, 80) + "..." : summary;
+  };
+
   return (
     <Drawer
       variant="persistent"
@@ -62,7 +73,7 @@ const Sidebar = ({ open, onClose, messages, clearMessages, chatSummary }) => {
               textAlign: 'center',
             }}
           >
-            {chatSummary || "No chat summary available."} {/* Show chat summary or placeholder */}
+            {generateSummary()} {/* Display concise summary */}
           </Box>
         </ListItem>
         <Divider />

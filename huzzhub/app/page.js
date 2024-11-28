@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
-import MenuIcon from '@mui/icons-material/Menu'; // Importing Menu icon
+import MenuIcon from '@mui/icons-material/Menu'; 
 import { useState } from "react";
 
 const LakersTheme = createTheme({
@@ -80,6 +80,12 @@ export default function Home() {
         ...prevMessages.slice(0, -1), 
         { role: "assistant", content: "Error fetching response. Please try again." },
       ]);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      sendMessage(); // Trigger the sendMessage function when Enter is pressed
     }
   };
 
@@ -188,6 +194,7 @@ export default function Home() {
                 fullWidth
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyPress} // Add the keydown event handler
               />
               <Button
                 variant="contained"
