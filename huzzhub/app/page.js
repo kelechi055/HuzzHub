@@ -11,37 +11,65 @@ import {
   ThemeProvider,
   IconButton,
 } from "@mui/material";
-import { deepPurple } from "@mui/material/colors";
 import MenuIcon from '@mui/icons-material/Menu'; 
 import { useState } from "react";
+import { marked } from "marked"; // this parses markdown text to html (bold, etc...)
+import AudioPlayer from '../components/AudioPlayer';
 
-const LakersTheme = createTheme({
+const chillTheme = createTheme({
   palette: {
     primary: {
-      main: deepPurple[500],
-      light: "#63a4ff",
-      dark: "#004ba0",
-      contrastText: "#fff",
+      main: "#C0A252",
+      light: "#D4B270",
+      dark: "#9A842F",
+      contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "yellow",
-      light: "#d05ce3",
-      dark: "#6a0080",
-      contrastText: "#fff",
+      main: "#000000",
+      light: "#6D6D6D",
+      dark: "#000000",
+      contrastText: "#91793E",
     },
+    //background color gradient
     gradients: {
-      primary: "linear-gradient(45deg, #9575cd 30%, #dce775 90%)",
-      secondary: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+      primary: "linear-gradient(180deg, #000000 5%, #C0A252 90%)",
+      secondary: "linear-gradient(90deg, #C0A252 30%, #000000 90%)",
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiInputBase-input": {
+            color: "#ffff", // makes users message color white (text field)
+          },
+          "& .MuiInputLabel-root": {
+            color: "#C0A252", 
+          },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: "#C0A252", 
+            },
+            "&:hover fieldset": {
+              borderColor: "#91793E", 
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#91793E", 
+            },
+          },
+        },
+      },
     },
   },
 });
 
 export default function Home() {
+  
   const [messages, setMessages] = useState([
     {
       role: "assistant",
       content:
-        "Chill Guy: Hello! I'm just a chill guy, the HuzzHub Assistant. How can I assist you today? Whether it's about our platform, rizz, the huzz, bruzz, anything! feel free to ask!",
+        "Hello! I'm just a chill guy, the HuzzHub Assistant. How can I assist you today? Whether it's about our platform, rizz, the huzz, bruzz, anything! feel free to ask!",
     },
   ]);
 
@@ -83,14 +111,15 @@ export default function Home() {
     }
   };
 
+  //function so users can click "Enter" to send a message
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      sendMessage(); // Trigger the sendMessage function when Enter is pressed
+      sendMessage();
     }
   };
 
   return (
-    <ThemeProvider theme={LakersTheme}>
+    <ThemeProvider theme={chillTheme}>
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -104,9 +133,9 @@ export default function Home() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        sx={{ background: LakersTheme.palette.gradients.primary }}
+        sx={{ background: chillTheme.palette.gradients.primary }}
       >
-        {/* Menu icon at the top-left corner */}
+        {/* Menu Icon */}
         <IconButton
           onClick={() => setSidebarOpen(!sidebarOpen)}
           sx={{
@@ -118,7 +147,11 @@ export default function Home() {
         >
           <MenuIcon />
         </IconButton>
+        
+        {/* Chill Guy Music :) */}
+        <AudioPlayer />
 
+        {/* Chat Interface */}
         <Box display="flex" flexDirection="row" alignItems="center">
           <Box
             sx={{
@@ -137,18 +170,19 @@ export default function Home() {
             alignItems="center"
           />
           <Stack
+            //size of the chat box, etc...
             direction="column"
-            width="600px"
+            width="1200px"
             height="600px"
             p={2}
             spacing={2}
+            sx={{ flexGrow: 1 }}
           >
-            <Stack
-              direction="column"
-              spacing={2}
+            {/* Section for Scrollable Messages */}
+            <Box
               flexGrow={1}
               overflow="auto"
-              maxHeight="100%"
+              sx={{ padding: "10px" }}
             >
               {messages.map((msg, index) => (
                 <Box
@@ -167,49 +201,80 @@ export default function Home() {
                         width: 40,
                         height: 40,
                         borderRadius: "50%",
-                        marginRight: 1, 
+                        marginRight: 1,
                       }}
                     />
                   )}
                   <Box
-                    bgcolor={
-                      msg.role === "assistant"
-                        ? "primary.main"
-                        : "secondary.main"
-                    }
-                    color={msg.role === "assistant" ? "white" : "black"}
-                    borderRadius={16}
+                    bgcolor={msg.role === "assistant" ? "primary.main" : "secondary.main"}
+                    color={msg.role === "assistant" ? "white" : "#C0A252"}
+                    borderRadius={7}
                     p={3}
-                    sx={{ maxWidth: "75%" }} 
+                    sx={{
+                      maxWidth: "75%",
+                      fontFamily: "'Poppins', sans-serif",
+                      fontSize: "16px",
+                    }}
                   >
-                    {msg.content}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: marked(msg.content), // this just renders the different message content as markdown (bold, italics, etc.)
+                      }}
+                    />
                   </Box>
-                </Box> 
+                </Box>
               ))}
-            </Stack>
+            </Box>
 
-            <Stack direction="row" spacing={2}>
+            {/* Input Section */}
+            <Box
+              component="form"
+              onSubmit={(e) => {
+                e.preventDefault(); 
+                sendMessage();
+              }}
+              display="flex"
+              alignItems="center"
+              sx={{
+                borderTop: `1px solid ${chillTheme.palette.primary.main}`,
+                paddingTop: "8px",
+              }}
+            >
               <TextField
-                label="Message"
+                label="Ask Chill Guy anything..."
                 fullWidth
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyPress} // Add the keydown event handler
+                onKeyDown={handleKeyPress}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    fontFamily: "'Poppins', sans-serif",
+                    fontSize: "16px",
+                  },
+                }}
               />
+
+              {/* Send Button */}
               <Button
                 variant="contained"
-                onClick={sendMessage}
+                type="submit"
                 sx={{
-                  backgroundColor: "primary.main",
+                  marginLeft: 1,
+                  backgroundColor: chillTheme.palette.primary.main,
                   "&:hover": {
-                    backgroundColor: "secondary.main",
-                    color: "black",
+                    backgroundColor: "#B7994E",
                   },
+                  padding: "12px 24px",
+                  fontWeight: "500",
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "16px",
+                  textTransform: "none"
                 }}
               >
                 Send
               </Button>
-            </Stack>
+            </Box>
           </Stack>
         </Box>
       </Box>

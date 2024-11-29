@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^3.0.0",
+    "@clerk/nextjs": "^6.5.1",
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.11.6",
-    "next": "^13.4.0",
+    "marked": "^15.0.2",
+    "next": "^15.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
