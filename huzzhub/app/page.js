@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu'; 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { marked } from "marked"; // this parses markdown text to html (bold, etc...)
 import AudioPlayer from '../components/AudioPlayer';
 
@@ -75,19 +75,20 @@ export default function Home() {
 
   const [message, setMessage] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const messagesEndRef = useRef(null);
 
   const sendMessage = async () => {
     if (!message.trim()) return;
-
+  
     const updatedMessages = [
       ...messages, 
       { role: "user", content: message }, 
       { role: "assistant", content: "..." }
     ];
-
+  
     setMessages(updatedMessages);
     setMessage("");
-
+  
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -96,11 +97,14 @@ export default function Home() {
         },
         body: JSON.stringify({ messages: updatedMessages.slice(0, -1) }), 
       });
-
+  
       const result = await response.json();
+  
+      const formattedResponse = formatResponse(result.content);
+  
       setMessages((prevMessages) => [
         ...prevMessages.slice(0, -1), 
-        { role: "assistant", content: result.content }, 
+        { role: "assistant", content: formattedResponse }, 
       ]);
     } catch (error) {
       console.error("Error fetching AI response:", error);
@@ -110,6 +114,31 @@ export default function Home() {
       ]);
     }
   };
+  
+  // function to format reponse into paragraphs!
+  const formatResponse = (text) => {
+    const sentences = text.split(/(?<=[.?!])\s+/); 
+    const chunkSize = 4; 
+    const paragraphs = [];
+  
+    for (let i = 0; i < sentences.length; i += chunkSize) {
+      paragraphs.push(sentences.slice(i, i + chunkSize).join(" ")); 
+    }
+  
+    return paragraphs.join("\n"); 
+  };
+  
+
+  // automatically scroll to the bottom of messages
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   //function so users can click "Enter" to send a message
   const handleKeyPress = (e) => {
@@ -198,8 +227,8 @@ export default function Home() {
                       src="/chillguypfp.png"
                       alt="Chill Guy"
                       sx={{
-                        width: 40,
-                        height: 40,
+                        width: 56,
+                        height: 56,
                         borderRadius: "50%",
                         marginRight: 1,
                       }}
@@ -224,6 +253,7 @@ export default function Home() {
                   </Box>
                 </Box>
               ))}
+              <div ref={messagesEndRef} />
             </Box>
 
             {/* Input Section */}
@@ -236,7 +266,6 @@ export default function Home() {
               display="flex"
               alignItems="center"
               sx={{
-                borderTop: `1px solid ${chillTheme.palette.primary.main}`,
                 paddingTop: "8px",
               }}
             >
@@ -251,6 +280,7 @@ export default function Home() {
                     color: "white",
                     fontFamily: "'Poppins', sans-serif",
                     fontSize: "16px",
+                    borderRadius: "30px",
                   },
                 }}
               />
@@ -261,20 +291,30 @@ export default function Home() {
                 type="submit"
                 sx={{
                   marginLeft: 1,
-                  backgroundColor: chillTheme.palette.primary.main,
-                  "&:hover": {
-                    backgroundColor: "#B7994E",
-                  },
+                  background: "linear-gradient(90deg, #C0A252, #91793E)",
+                  borderRadius: "30px", 
                   padding: "12px 24px",
-                  fontWeight: "500",
+                  fontWeight: "550", 
                   fontFamily: "'Poppins', sans-serif",
                   fontSize: "16px",
-                  textTransform: "none"
+                  textTransform: "none", 
+                  boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)", 
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    background: "linear-gradient(90deg, #D4B270, #C0A252)", 
+                    boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.3)", 
+                    transform: "translateY(-4px)",
+                  },
+                  "&:active": {
+                    transform: "translateY(0)", 
+                    boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.2)",
+                  },
                 }}
               >
                 Send
               </Button>
             </Box>
+            {/* End of Input Section */}
           </Stack>
         </Box>
       </Box>

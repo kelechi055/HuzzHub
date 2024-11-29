@@ -12,16 +12,20 @@ export default function AudioPlayer() {
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1); 
   const [isHovered, setIsHovered] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     const audio = document.getElementById('background-audio');
     if (audio) {
       audio.volume = isMuted ? 0 : volume;
-      audio.play().catch((err) => {
-        console.error("Autoplay blocked:", err);
-      });
+
+      if (hasInteracted) {
+        audio.play().catch((err) => {
+          console.error('Autoplay blocked:', err);
+        });
+      }
     }
-  }, [isMuted, volume]);
+  }, [isMuted, volume, hasInteracted]); //plays the chill audio when a user clicks or interacts with the page
 
   const toggleMute = () => {
     setIsMuted((prevState) => !prevState);
@@ -31,6 +35,17 @@ export default function AudioPlayer() {
     setVolume(newValue);
     setIsMuted(newValue === 0); // mutes automatically if the volume is 0
   };
+
+  const handleUserInteraction = () => {
+    setHasInteracted(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleUserInteraction, { once: true });
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+    };
+  }, []);
 
   return (
     <Box
