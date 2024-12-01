@@ -147,7 +147,7 @@ export default function Home() {
               color: 'white'
             }
           }} 
-          href="/generate"
+          href="/chat"
         >
           Start Rizzin' 😼
           <Image src={"/chillguy.png"} alt="Chill Guy" width={50} height={30} />

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Drawer, List, ListItem, ListItemText, Divider, IconButton, Box, Typography, Stack, TextField } from '@mui/material';
-import { GitHub, Logout, Home, History, Settings, Help } from '@mui/icons-material';
+import { Drawer, List, Divider, IconButton, Box, Typography } from '@mui/material';
+import { GitHub, Home, Close } from '@mui/icons-material';
+import Link from 'next/link';
 
 const Sidebar = ({ open, onClose, messages }) => {
   return (
@@ -23,133 +24,186 @@ const Sidebar = ({ open, onClose, messages }) => {
         },
       }}
     >
-      <List>
+      <Box>
+        {/* Close Button */}
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            color: 'white',
+          }}
+        >
+          <Close />
+        </IconButton>
+
         {/* HuzzHub Branding */}
-        <ListItem sx={{ padding: 0 }}>
-          <Typography
-            variant="h5"
-            color="white"
+        <Typography
+          variant="h5"
+          color="white"
+          sx={{
+            fontFamily: "'A Alloy Ink Regular', sans-serif",
+            fontWeight: 'bold',
+            fontSize: '2rem',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            padding: '16px 24px',
+          }}
+        >
+          HuzzHub
+        </Typography>
+
+        {/* Rizz Huzz, Secure Gyatt */}
+        <Typography
+          variant="body1"
+          color="white"
+          sx={{
+            fontFamily: "'A Alloy Ink Regular', sans-serif",
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            padding: '8px 24px',
+            marginTop: 2,
+          }}
+        >
+          Rizz Huzz, Secure Gyatt
+        </Typography>
+        
+        <Divider sx={{ borderColor: '#444' }} />
+
+        {/* Home and GitHub buttons */}
+        <Link href="/" passHref>
+          <Box
             sx={{
-              fontFamily: "'A Alloy Ink Regular', sans-serif",
-              fontWeight: 'bold',
-              fontSize: '2rem',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              padding: '16px 24px',
+              '&:hover': { backgroundColor: '#333' },
+              paddingLeft: 2,
+              display: 'flex',
+              alignItems: 'center',
+              paddingY: 1,
+              cursor: 'pointer',
             }}
           >
-            HuzzHub
-          </Typography>
-        </ListItem>
+            <IconButton sx={{ color: 'white', marginRight: 2 }}>
+              <Home />
+            </IconButton>
+            <Typography variant="body1" color="white" fontWeight="500">
+              Home
+            </Typography>
+          </Box>
+        </Link>
+
+        <Link href="https://github.com/kelechi055/HuzzHub/tree/main" passHref>
+          <Box
+            sx={{
+              '&:hover': { backgroundColor: '#333' },
+              paddingLeft: 2,
+              display: 'flex',
+              alignItems: 'center',
+              paddingY: 1,
+              cursor: 'pointer',
+            }}
+          >
+            <IconButton sx={{ color: 'white', marginRight: 2 }}>
+              <GitHub />
+            </IconButton>
+            <Typography variant="body1" color="white" fontWeight="500">
+              GitHub
+            </Typography>
+          </Box>
+        </Link>
+
         <Divider sx={{ borderColor: '#444' }} />
 
-        {/* Home Button */}
-        <ListItem sx={{ '&:hover': { backgroundColor: '#333' } }}>
-          <IconButton sx={{ color: 'white', marginRight: 2 }}>
-            <Home />
-          </IconButton>
-          <ListItemText primary="Home" sx={{ color: 'white', fontWeight: '500' }} />
-        </ListItem>
+        {/* Motivation Header */}
+        <Typography
+          variant="h6"
+          color="white"
+          sx={{
+            fontFamily: "'A Alloy Ink Regular', sans-serif",
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            padding: '8px 24px',
+            marginTop: 2,
+          }}
+        >
+          Motivation
+        </Typography>
 
-        {/* History Button */}
-        <ListItem sx={{ '&:hover': { backgroundColor: '#333' } }}>
-          <IconButton sx={{ color: 'white', marginRight: 2 }}>
-            <History />
-          </IconButton>
-          <ListItemText primary="History" sx={{ color: 'white', fontWeight: '500' }} />
-        </ListItem>
+        {/* Motivational Text */}
+        <Box
+          bgcolor="#444"
+          color="white"
+          borderRadius={16}
+          p={2}
+          width="100%"
+          sx={{
+            boxShadow: 2,
+            transition: 'all 0.3s ease',
+            '&:hover': { transform: 'scale(1.02)' },
+            marginTop: 2,
+          }}
+        >
+          "Tired of losing the Huzz, lock in and grind HuzzHub"
+        </Box>
 
-        {/* Search Bar */}
-        <ListItem>
-          <TextField
-            fullWidth
-            variant="outlined"
-            size="small"
-            placeholder="Search messages..."
-            sx={{
-              backgroundColor: '#333',
+        <Divider sx={{ borderColor: '#444' }} />
+
+        {/* Our Inspiration Header */}
+        <Typography
+          variant="h6"
+          color="white"
+          sx={{
+            fontFamily: "'A Alloy Ink Regular', sans-serif",
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            padding: '8px 24px',
+            marginTop: 2,
+          }}
+        >
+          Our Inspiration
+        </Typography>
+
+        {/* Images */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingTop: 2,
+            paddingBottom: 2,
+          }}
+        >
+          <img
+            src="https://pbs.twimg.com/media/FeBFFo-XgAEBlAX.jpg:large"
+            alt="Motivational Image 1"
+            style={{
+              width: '80%', // Make the image smaller
               borderRadius: '8px',
-              input: { color: 'white' },
-              '& .MuiOutlinedInput-root': { borderColor: '#444' },
-              '& .MuiInputBase-input': { padding: '5px' },
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.5)',
+              marginBottom: '16px', // Space between the images
             }}
           />
-        </ListItem>
-        <Divider sx={{ borderColor: '#444' }} />
+          <img
+            src="https://substackcdn.com/image/fetch/w_640,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F64ac6e19-e62b-43af-9294-c285966fb0cf_1080x1920.jpeg"
+            alt="Motivational Image 2"
+            style={{
+              width: '80%', // Make the image smaller
+              borderRadius: '8px',
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.5)',
+            }}
+          />
+        </Box>
 
-        {/* GitHub Link */}
-        <ListItem sx={{ '&:hover': { backgroundColor: '#333' } }}>
-          <IconButton sx={{ color: 'white', marginRight: 2 }}>
-            <GitHub />
-          </IconButton>
-          <ListItemText primary="GitHub" sx={{ color: 'white', fontWeight: '500' }} />
-        </ListItem>
-
-        <Divider sx={{ borderColor: '#444' }} />
-
-        {/* Recent Conversations */}
-        <Typography variant="h6" color="white" sx={{ fontWeight: '500', marginBottom: 1 }}>
-          Recent Conversations
-        </Typography>
-        <Stack spacing={2} sx={{ maxHeight: 'calc(100vh - 380px)', overflowY: 'auto', paddingRight: 1 }}>
-          {messages.map((msg, index) => (
-            <React.Fragment key={index}>
-              <ListItem sx={{ '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
-                <Box
-                  bgcolor={msg.role === 'assistant' ? '#444' : '#666'}
-                  color="white"
-                  borderRadius={16}
-                  p={2}
-                  width="100%"
-                  sx={{
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
-                    boxShadow: 2,
-                    transition: 'all 0.3s ease',
-                    '&:hover': { transform: 'scale(1.02)' },
-                  }}
-                >
-                  {msg.content}
-                </Box>
-              </ListItem>
-              <Divider sx={{ borderColor: '#444' }} />
-            </React.Fragment>
-          ))}
-        </Stack>
-
-        <Divider sx={{ borderColor: '#444' }} />
-
-        {/* Settings Button */}
-        <ListItem sx={{ '&:hover': { backgroundColor: '#333' } }}>
-          <IconButton sx={{ color: 'white', marginRight: 2 }}>
-            <Settings />
-          </IconButton>
-          <ListItemText primary="Settings" sx={{ color: 'white', fontWeight: '500' }} />
-        </ListItem>
-
-        {/* Help Button */}
-        <ListItem sx={{ '&:hover': { backgroundColor: '#333' } }}>
-          <IconButton sx={{ color: 'white', marginRight: 2 }}>
-            <Help />
-          </IconButton>
-          <ListItemText primary="Help" sx={{ color: 'white', fontWeight: '500' }} />
-        </ListItem>
-
-        {/* Log Out Button */}
-        <ListItem sx={{ marginTop: 'auto', '&:hover': { backgroundColor: '#333' } }}>
-          <Typography variant="body1" color="white" fontWeight="bold" sx={{ fontSize: '1rem' }}>
-            <Logout sx={{ marginRight: 1 }} />
-            Log Out
+        {/* Copyright */}
+        <Box sx={{ padding: '16px 24px', paddingTop: 2 }}>
+          <Divider sx={{ borderColor: '#444' }} />
+          <Typography variant="caption" color="white" align="center" sx={{ paddingTop: 1 }}>
+            &copy; 2024 HuzzHub. All rights reserved.
           </Typography>
-        </ListItem>
-      </List>
-
-      {/* Footer */}
-      <Box sx={{ position: 'absolute', bottom: 0, width: '100%', padding: 1 }}>
-        <Divider sx={{ borderColor: '#444' }} />
-        <Typography variant="caption" color="white" align="center" sx={{ paddingTop: 1 }}>
-          &copy; 2024 HuzzHub. All rights reserved.
-        </Typography>
+        </Box>
       </Box>
     </Drawer>
   );
