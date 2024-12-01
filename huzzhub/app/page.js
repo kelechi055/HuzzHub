@@ -252,7 +252,7 @@ export default function Home() {
       className="text-3xl font-semibold tracking-tight text-white-900 sm:text-4xl lg:text-5xl"
       style={{ textAlign: "center" }}
       >
-        If you're a chill guy, I suggest you sign up... you don't wanna be like these guy.
+        If you're a chill guy, I suggest you sign up... you don't wanna be like this guy.
       </h2>
       <Box
         sx={{
