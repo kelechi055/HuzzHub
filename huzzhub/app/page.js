@@ -1,323 +1,305 @@
 'use client';
-
-import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
-import Sidebar from '../components/sidebar'; 
-import {
-  Box,
-  Stack,
-  TextField,
-  Button,
-  createTheme,
-  ThemeProvider,
-  IconButton,
-} from "@mui/material";
+import Image from "next/image";
+import { Box, Typography, Container, Grid, Card, CardContent, CardActionArea, AppBar, Toolbar, Button, Link, IconButton, Drawer, List, ListItem } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu'; 
-import { useState, useEffect, useRef } from "react";
-import { marked } from "marked"; // this parses markdown text to html (bold, etc...)
-import AudioPlayer from '../components/AudioPlayer';
-
-const chillTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#C0A252",
-      light: "#D4B270",
-      dark: "#9A842F",
-      contrastText: "#FFFFFF",
-    },
-    secondary: {
-      main: "#000000",
-      light: "#6D6D6D",
-      dark: "#000000",
-      contrastText: "#91793E",
-    },
-    //background color gradient
-    gradients: {
-      primary: "linear-gradient(180deg, #000000 5%, #C0A252 90%)",
-      secondary: "linear-gradient(90deg, #C0A252 30%, #000000 90%)",
-    },
-  },
-  components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          "& .MuiInputBase-input": {
-            color: "#ffff", // makes users message color white (text field)
-          },
-          "& .MuiInputLabel-root": {
-            color: "#C0A252", 
-          },
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "#C0A252", 
-            },
-            "&:hover fieldset": {
-              borderColor: "#91793E", 
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#91793E", 
-            },
-          },
-        },
-      },
-    },
-  },
-});
+import { grey } from '@mui/material/colors';
+import { useEffect, useState } from "react";
+import { Head } from "next/head";
+import TrustedBy from "@/components/trusted";
+import Testimonial1 from "@/components/testimonial";
+import './globals.css';
 
 export default function Home() {
   
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content:
-        "Hello! I'm just a chill guy, the HuzzHub Assistant. How can I assist you today? Whether it's about our platform, rizz, the huzz, bruzz, anything! feel free to ask!",
-    },
-  ]);
-
-  const [message, setMessage] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const messagesEndRef = useRef(null);
-
-  const sendMessage = async () => {
-    if (!message.trim()) return;
-  
-    const updatedMessages = [
-      ...messages, 
-      { role: "user", content: message }, 
-      { role: "assistant", content: "..." }
-    ];
-  
-    setMessages(updatedMessages);
-    setMessage("");
-  
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ messages: updatedMessages.slice(0, -1) }), 
-      });
-  
-      const result = await response.json();
-  
-      const formattedResponse = formatResponse(result.content);
-  
-      setMessages((prevMessages) => [
-        ...prevMessages.slice(0, -1), 
-        { role: "assistant", content: formattedResponse }, 
-      ]);
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages.slice(0, -1), 
-        { role: "assistant", content: "Error fetching response. Please try again." },
-      ]);
-    }
-  };
-  
-  // function to format reponse into paragraphs!
-  const formatResponse = (text) => {
-    const sentences = text.split(/(?<=[.?!])\s+/); 
-    const chunkSize = 4; 
-    const paragraphs = [];
-  
-    for (let i = 0; i < sentences.length; i += chunkSize) {
-      paragraphs.push(sentences.slice(i, i + chunkSize).join(" ")); 
-    }
-  
-    return paragraphs.join("\n"); 
-  };
-  
-
-  // automatically scroll to the bottom of messages
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  //function so users can click "Enter" to send a message
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
-  };
-
   return (
-    <ThemeProvider theme={chillTheme}>
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        messages={messages}
-      />
+    <Box 
+      sx={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        backgroundImage: 'url(/background.png)', 
+        backgroundSize: 'cover', 
+        backgroundPosition: 'center', 
+        fontFamily: 'Inter',
+        padding: 0,
+        margin: 0
+      }}
+    >
+    <audio autoPlay loop hidden>
+      <source src="/chillguy.wav" type="audio/wav" />
+      Sorry my guy. Your browser does not support the audio element.
+    </audio>
 
-      <Box
-        width="100%"
-        height="100vh"
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ background: chillTheme.palette.gradients.primary }}
-      >
-        {/* Menu Icon */}
-        <IconButton
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          sx={{
-            position: "absolute",
-            top: "16px",
-            left: "16px",
-            color: "white",
+      {/* Navbar */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mt: 4 }}>
+        <Button
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            p: 0 
+          }}
+          href="/" 
+        >
+          <Image src="/logo.png" alt="HuzzHub Logo" width={200} height={40} style={{ marginRight: '0px', marginTop: '-40px' }} priority />
+          <Image src="/chillguy.png" alt="Just a chill guy :) Logo" width={100} height={40} style={{ marginRight: '0px', marginTop: '-50px' }} /> 
+        </Button>
+      </Box>
+      {/* Navbar End */}
+
+      {/* Hero Section */}
+      <Box id="home" sx={{ flex: 1, textAlign: 'center', my: 4, color: 'white', font: 'Inter' }}>
+        <br></br>
+        <buttons
+          style={{
+            background: 'linear-gradient(to left, #C0A252, #A58A47)',
+            backgroundSize: '200% 200%',
+            animation: 'rainbow-animation 10s ease infinite',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '50px',
+            color: 'white',
+            cursor: 'pointer',
+            fontSize: '12px',
           }}
         >
-          <MenuIcon />
-        </IconButton>
-        
-        {/* Chill Guy Music :) */}
-        <AudioPlayer />
+          💫 | Introducing HuzzHub
+        </buttons>
+        <Typography
+          variant="h1"
+          component="h1"
+          gutterBottom
+          sx={{
+            fontWeight: 'bold',
+            fontFamily: 'Inter',
+            fontSize: { xs: '2.170rem', sm: '3rem', md: '4.5rem' },
+            lineHeight: { xs: '3rem', sm: '3.5rem', md: '4.5rem' },
+            animation: 'SlidesDown 2s ease-in-out',
+            mx: { xs: 2, sm: 4 },
+            px: 2,
+            whiteSpace: 'nowrap',
+            position: 'relative',
+          }}
+        >
+          <br />
+          Rizz Up The Huzz&nbsp;
+        </Typography>
+        <Typography
+          variant="h1"
+          component="h1"
+          gutterBottom
+          sx={{
+            fontWeight: 'bold',
+            fontFamily: 'Inter',
+            fontSize: { xs: '2.5rem', sm: '3rem', md: '4.5rem' },
+            lineHeight: { xs: '3rem', sm: '3.5rem', md: '4.5rem' },
+            animation: 'slideDown 2s ease-in-out',
+            mx: { xs: 2, sm: 4 },
+            px: 2,
+          }}
+        >
+          With AI 
+        </Typography>
 
-        {/* Chat Interface */}
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Box
-            sx={{
-              height: 633,
-              width: 400,
-              marginRight: 2,
-              backgroundSize: "cover",
-              backgroundImage: "url(/huzzhub-assistant-image.png)",
-              display: {
-                sm: "none",
-                md: "flex",
-              },
-            }}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          />
-          <Stack
-            //size of the chat box, etc...
-            direction="column"
-            width="1200px"
-            height="600px"
-            p={2}
-            spacing={2}
-            sx={{ flexGrow: 1 }}
-          >
-            {/* Section for Scrollable Messages */}
+        <br></br>
+        <br></br>
+        <br></br>
+        <Typography 
+          variant="h6" 
+          component="h2" 
+          gutterBottom 
+          sx={{ 
+            fontWeight: 'light', 
+            fontFamily: 'Inter',
+            maxWidth: { xs: '90%', sm: '70%', md: '50%' }, 
+            textAlign: 'center', 
+            margin: '0 auto',
+            fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' },
+            animation: 'fadeIn 4s ease-in-out',
+            px: 2 
+          }}
+        >
+          Unlock your full potential with HuzzHub, the ultimate meme-powered AI assistant. 
+          Let Chill Guy guide your conversations, drop iconic pick-up lines, and help you master the art of rizz with humor and style. 
+          Laugh, learn, and level up your game—all in one chill hub.
+        </Typography>
+        <br></br>
+        <TrustedBy />
+        <br></br>
+        <br></br>
+        <br></br>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          sx={{ 
+            mt: 2, 
+            fontSize: { xs: '1rem', sm: '1.2rem' }, 
+            fontWeight: '500', 
+            fontFamily: 'Inter',
+            backgroundColor: 'white', 
+            color: 'black', 
+            animation: 'slideUp 4s ease-in-out',
+            textTransform: 'none', 
+            borderRadius: 2,
+            px: 4,
+            '&:hover': { 
+              transform: 'scale(1.05)', 
+              backgroundImage: 'linear-gradient(to bottom, #C0A252, black)', 
+              color: 'white'
+            }
+          }} 
+          href="/generate"
+        >
+          Start Rizzin' 😼
+          <Image src={"/chillguy.png"} alt="Chill Guy" width={50} height={30} />
+        </Button>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <Box id="features" sx={{ py: 8, backgroundColor: "transparent", textAlign: "center" }}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
+            fontWeight: "bold",
+            color: "white",
+            mb: 6,
+          }}
+        >
+          Features
+        </Typography>
+        <Box
+          sx={{
+            maxWidth: "1200px",
+            margin: "0 auto", 
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
+            gap: 4,
+            px: { xs: 2, md: 4 },
+          }}
+        >
+          {/* Feature Cards */}
+          {[
+            {
+              title: "AI Chatbot (Chill Guy)",
+              description: "Talk with chill guy and maximize your charisma with girls through iconic pick-up lines and witty conversations.",
+              icon: "/chillguypfp.png",
+            },
+            {
+              title: "Confidence Booster",
+              description: "Get the best tips and tricks to boost your confidence in social situations.",
+              icon: "/boost.png",
+            },
+            {
+              title: "Master Rizz Strategies",
+              description: "Learn proven strategies to master the art of charm and style effortlessly, become a huzz magnet.",
+              icon: "/duke.png",
+            },
+          ].map((feature, index) => (
             <Box
-              flexGrow={1}
-              overflow="auto"
-              sx={{ padding: "10px" }}
-            >
-              {messages.map((msg, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  justifyContent={msg.role === "assistant" ? "flex-start" : "flex-end"}
-                  alignItems="center"
-                  sx={{ marginBottom: 2 }}
-                >
-                  {msg.role === "assistant" && (
-                    <Box
-                      component="img"
-                      src="/chillguypfp.png"
-                      alt="Chill Guy"
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: "50%",
-                        marginRight: 1,
-                      }}
-                    />
-                  )}
-                  <Box
-                    bgcolor={msg.role === "assistant" ? "primary.main" : "secondary.main"}
-                    color={msg.role === "assistant" ? "white" : "#C0A252"}
-                    borderRadius={7}
-                    p={3}
-                    sx={{
-                      maxWidth: "75%",
-                      fontFamily: "'Poppins', sans-serif",
-                      fontSize: "16px",
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: marked(msg.content), // this just renders the different message content as markdown (bold, italics, etc.)
-                      }}
-                    />
-                  </Box>
-                </Box>
-              ))}
-              <div ref={messagesEndRef} />
-            </Box>
-
-            {/* Input Section */}
-            <Box
-              component="form"
-              onSubmit={(e) => {
-                e.preventDefault(); 
-                sendMessage();
-              }}
-              display="flex"
-              alignItems="center"
+              key={index}
               sx={{
-                paddingTop: "8px",
+                backgroundColor: "#FFFFFF",
+                borderRadius: "12px",
+                padding: 4,
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.4)",
+                },
               }}
             >
-              <TextField
-                label="Ask Chill Guy anything..."
-                fullWidth
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyPress}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    fontFamily: "'Poppins', sans-serif",
-                    fontSize: "16px",
-                    borderRadius: "30px",
-                  },
-                }}
+              <Image
+                src={feature.icon}
+                alt={feature.title}
+                width={64}
+                height={64}
+                style={{ margin: "0 auto", marginBottom: "16px" }}
               />
-
-              {/* Send Button */}
-              <Button
-                variant="contained"
-                type="submit"
+              <Typography
+                variant="h5"
                 sx={{
-                  marginLeft: 1,
-                  background: "linear-gradient(90deg, #C0A252, #91793E)",
-                  borderRadius: "30px", 
-                  padding: "12px 24px",
-                  fontWeight: "550", 
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "16px",
-                  textTransform: "none", 
-                  boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)", 
-                  transition: "all 0.3s ease-in-out",
-                  "&:hover": {
-                    background: "linear-gradient(90deg, #D4B270, #C0A252)", 
-                    boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.3)", 
-                    transform: "translateY(-4px)",
-                  },
-                  "&:active": {
-                    transform: "translateY(0)", 
-                    boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.2)",
-                  },
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  color: "#333333",
+                  mb: 2,
                 }}
               >
-                Send
-              </Button>
+                {feature.title}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: "0.9rem",
+                  color: "#666666",
+                }}
+              >
+                {feature.description}
+              </Typography>
             </Box>
-            {/* End of Input Section */}
-          </Stack>
+          ))}
         </Box>
       </Box>
-    </ThemeProvider>
+
+      </Box>
+
+      <Testimonial1>
+        <br></br>
+      </Testimonial1>  
+      <br></br>
+      <h2
+      className="text-3xl font-semibold tracking-tight text-white-900 sm:text-4xl lg:text-5xl"
+      style={{ textAlign: "center" }}
+      >
+        If you're a chill guy, I suggest you sign up... you don't wanna be like these guy.
+      </h2>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mt: 4,
+        }}
+      >
+        <Image
+          src="/notchillguy.png"
+          alt="Dude Isn't chill... lame"
+          width={200}
+          height={200}
+          style={{ borderRadius: "50%", animation: "bounce 2s infinite" }}
+        />
+      </Box>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      {/* Footer */}
+      <Box sx={{ py: 1, textAlign: 'center'}}>
+        <Typography 
+          variant="h1" 
+          color={grey[500]}
+          sx={{ 
+            color: '#E0E0E0', 
+            fontFamily: 'Inter',
+            fontWeight: 'light',
+            fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' }
+          }}
+        >
+          © 2024 HuzzHub. Built by{' '}
+          <Link 
+            color="inherit" 
+            underline="hover" 
+            sx={{ 
+              fontWeight: 'bold', 
+              color: 'white'
+            }}
+          >
+            Some Chill Guys
+          </Link> 
+          . All rights reserved.
+      </Typography>
+      </Box>
+    </Box>
   );
 }

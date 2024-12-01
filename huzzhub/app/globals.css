@@ -1,36 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #C0A252;
+    --foreground: #ededed;
+  }
+}
 
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Global styles for scrollbar! */
-
 ::-webkit-scrollbar {
-  width: 12px; 
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
   background: #1e1e1e;
-  border-radius: 6px; 
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #C0A252, #91793E); 
-  border-radius: 6px; 
-  border: 3px solid #1e1e1e; 
+  background: linear-gradient(180deg, #C0A252, #91793E);
+  border-radius: 6px;
+  border: 3px solid #1e1e1e;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #D4B270, #C0A252); 
+  background: linear-gradient(180deg, #D4B270, #C0A252);
 }
 
 ::-webkit-scrollbar-horizontal {
-  height: 8px; 
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb-horizontal {
   border-radius: 6px;
   background: linear-gradient(90deg, #C0A252, #91793E);
 }
+

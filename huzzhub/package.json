@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.5.1",
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.11.6",
+    "@tailwindcss/typography": "^0.5.15",
     "marked": "^15.0.2",
     "next": "^15.0.3",
     "react": "^18.2.0",
@@ -21,8 +22,11 @@
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8.0.0",
     "eslint-config-next": "^13.4.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
     "typescript": "^5.0.0"
   }
 }
