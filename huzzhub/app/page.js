@@ -49,21 +49,22 @@ export default function Home() {
       {/* Hero Section */}
       <Box id="home" sx={{ flex: 1, textAlign: 'center', my: 4, color: 'white', font: 'Inter' }}>
         <br></br>
-        <buttons
-          style={{
-            background: 'linear-gradient(to left, #C0A252, #A58A47)',
-            backgroundSize: '200% 200%',
-            animation: 'rainbow-animation 10s ease infinite',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '50px',
-            color: 'white',
-            cursor: 'pointer',
-            fontSize: '12px',
-          }}
-        >
-          💫 | Introducing HuzzHub
-        </buttons>
+        <button
+    style={{
+    background: 'linear-gradient(to left, #C0A252, #A58A47)',
+    backgroundSize: '200% 200%',
+    animation: 'rainbow-animation 10s ease infinite',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '50px',
+    color: 'white',
+    cursor: 'pointer',
+    fontSize: '12px',
+  }}
+>
+  💫 | Introducing HuzzHub
+</button>
+
         <Typography
           variant="h1"
           component="h1"
