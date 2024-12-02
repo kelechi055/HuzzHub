@@ -145,9 +145,8 @@ const Sidebar = ({ open, onClose, messages }) => {
             marginTop: 2,
           }}
         >
-          "Tired of losing the Huzz, lock in and grind HuzzHub"
+          Tired of losing the Huzz, lock in and grind HuzzHub
         </Box>
-
         <Divider sx={{ borderColor: '#444' }} />
 
         {/* Our Inspiration Header */}
