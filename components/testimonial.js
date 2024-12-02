@@ -62,7 +62,7 @@ function Testimonial1() {
       <div className={`px-4 sm:px-6 lg:px-8 ${classNames.container}`}>
         <div className={`max-w-3xl mx-auto ${classNames.header}`}>
           <h2 className="text-xl font-semibold tracking-tight text-white-900 sm:text-4xl lg:text-5xl">
-            Don&apos;t just take our words for it. Over 100+ chill guys and gals trust us.
+            Dont just take our words for it. Over 100+ chill guys and gals trust us.
           </h2>
         </div>
 
