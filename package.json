@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.5.1",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^5.16.8",
     "@mui/material": "^5.11.6",
     "@tailwindcss/typography": "^0.5.15",
