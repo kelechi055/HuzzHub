@@ -283,7 +283,7 @@ export default function Home() {
           }} 
           href="/chat"
         >
-          Start Rizzin' 😼
+          Start Rizzin&apos; 😼 {/* Escape the single quote */}
           <Image src={"/chillguy.png"} alt="Chill Guy" width={50} height={30} />
         </Button>
         <br></br>
@@ -393,11 +393,12 @@ export default function Home() {
       </Testimonial1>  
       <br></br>
       <h2
-      className="text-3xl font-semibold tracking-tight text-white-900 sm:text-4xl lg:text-5xl"
-      style={{ textAlign: "center" }}
+        className="text-3xl font-semibold tracking-tight text-white-900 sm:text-4xl lg:text-5xl"
+        style={{ textAlign: "center" }}
       >
-        If you're a chill guy, I suggest you start chatting... you don't wanna be like this guy.
+        If you&apos;re a chill guy, I suggest you start chatting... you don&apos;t wanna be like this guy.
       </h2>
+
         <br></br>
         <Box
         sx={{
