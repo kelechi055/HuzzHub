@@ -1,7 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import Head from "next/head";
-import { Analytics } from "@mui/icons-material";
 import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = localFont({
