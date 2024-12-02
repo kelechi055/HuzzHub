@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Head } from "next/head";
 import TrustedBy from "@/components/trusted";
 import Testimonial1 from "@/components/testimonial";
+import { Analytics } from "@vercel/analytics/react"
 import './globals.css';
 
 export default function Home() {
