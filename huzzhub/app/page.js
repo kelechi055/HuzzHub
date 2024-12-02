@@ -1,7 +1,8 @@
 'use client';
 import Image from "next/image";
-import { Box, Typography, Container, Grid, Card, CardContent, CardActionArea, AppBar, Toolbar, Button, Link, IconButton, Drawer, List, ListItem } from "@mui/material";
+import { Box, AppBar, Toolbar, Button, IconButton, Drawer, List, ListItem, ListItemText, Typography, Link } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu'; 
+import CloseIcon from "@mui/icons-material/Close";
 import { grey } from '@mui/material/colors';
 import { useEffect, useState } from "react";
 import { Head } from "next/head";
@@ -10,6 +11,12 @@ import Testimonial1 from "@/components/testimonial";
 import './globals.css';
 
 export default function Home() {
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
   
   return (
     <Box 
@@ -25,27 +32,153 @@ export default function Home() {
         margin: 0
       }}
     >
-    <audio autoPlay loop hidden>
-      <source src="/chillguy.wav" type="audio/wav" />
-      Sorry my guy. Your browser does not support the audio element.
-    </audio>
 
-      {/* Navbar */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mt: 4 }}>
-        <Button
-          sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            p: 0 
+      {/* Navbar with AppBar */}
+      <AppBar position="static" sx={{ background: "transparent", boxShadow: "none", py: 1 }}>
+      <Toolbar sx={{ justifyContent: "space-between", alignItems: "center" }}>
+        {/* Left Section: Logo */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton edge="start" href="/">
+            <Image src="/logo.png" alt="HuzzHub Logo" width={200} height={40} style={{ marginRight: '0px', marginTop: '-30px' }} priority />
+            </IconButton>
+            <IconButton edge="start">
+              <Image src="/h-logo.png" alt="Just a chill guy :) Logo" width={40} height={40} style={{ marginRight: '0px', marginTop: '-50px' }} /> 
+            </IconButton>
+          </Box>
+
+        {/* Right Section: Navigation */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            gap: 2,
           }}
-          href="/" 
         >
-          <Image src="/logo.png" alt="HuzzHub Logo" width={200} height={40} style={{ marginRight: '0px', marginTop: '-40px' }} priority />
-          <Image src="/chillguy.png" alt="Just a chill guy :) Logo" width={100} height={40} style={{ marginRight: '0px', marginTop: '-50px' }} /> 
-        </Button>
-      </Box>
-      {/* Navbar End */}
+          <Button
+            href="/"
+            sx={{
+              fontSize: '1rem',
+              color: "#999999",
+              textTransform: "none",
+              fontWeight: "500",
+              marginTop: '-50px',
+              "&:hover": { color: "#fff" },
+            }}
+          >
+            Home
+          </Button>
+          <Button
+            onClick={() => {
+              const element = document.getElementById("features");
+              if (element) element.scrollIntoView({ behavior: "smooth" });
+            }}
+            sx={{
+              fontSize: '1rem',
+              color: "#999999",
+              textTransform: "none",
+              fontWeight: "500",
+              marginTop: '-50px',
+              "&:hover": { color: "#fff" },
+            }}
+          >
+            Features
+          </Button>
+          <Button
+            onClick={() => {
+              const element = document.getElementById("testimonials");
+              if (element) element.scrollIntoView({ behavior: "smooth" });
+            }}
+            sx={{
+              fontSize: "1rem",
+              color: "#999999",
+              textTransform: "none",
+              fontWeight: "500",
+              marginTop: '-50px',
+              "&:hover": { color: "#fff" },
+            }}
+          >
+            Testimonials
+          </Button>
+          <Button
+            href="/chat"
+            sx={{
+              fontSize: "1rem",
+              color: "#999999",
+              textTransform: "none",
+              fontWeight: "500",
+              marginTop: '-50px',
+              "&:hover": { color: "#fff" },
+            }}
+          >
+            AI Chatbot
+          </Button>
+        </Box>
 
+        {/* Mobile Menu Button */}
+        <IconButton
+          onClick={toggleMenu}
+          sx={{
+            display: { xs: "flex", md: "none" },
+            color: "#999999",
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Toolbar>
+
+      {/* Drawer for Mobile Menu */}
+      <Drawer
+        anchor="right"
+        open={menuOpen}
+        onClose={toggleMenu}
+        PaperProps={{
+          sx: {
+            backgroundColor: "#1a1a1a",
+            color: "#fff",
+            width: 250,
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
+          <IconButton onClick={toggleMenu} sx={{ color: "#fff" }}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <List>
+          <ListItem button component="a" href="/" onClick={toggleMenu}>
+            <ListItemText primary="Home" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              const element = document.getElementById("features");
+              if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+                toggleMenu();
+              }
+            }}
+          >
+            <ListItemText primary="Features" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              const element = document.getElementById("testimonials");
+              if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+                toggleMenu();
+              }
+            }}
+          >
+            <ListItemText primary="Testimonials" />
+          </ListItem>
+          <ListItem button component="a" href="/chat" onClick={toggleMenu}>
+            <ListItemText primary="AI Chatbot" />
+          </ListItem>
+        </List>
+      </Drawer>
+    </AppBar>
+      {/* Navbar End */}
+      
       {/* Hero Section */}
       <Box id="home" sx={{ flex: 1, textAlign: 'center', my: 4, color: 'white', font: 'Inter' }}>
         <br></br>
@@ -158,90 +291,100 @@ export default function Home() {
         <br></br>
         <br></br>
         <Box id="features" sx={{ py: 8, backgroundColor: "transparent", textAlign: "center" }}>
+  <Typography
+    variant="h2"
+    sx={{
+      fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
+      fontWeight: "bold",
+      color: "white",
+      mb: 6,
+    }}
+  >
+    Features
+  </Typography>
+  <Box
+    sx={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      display: "grid",
+      gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
+      gap: 4,
+      px: { xs: 2, md: 4 },
+    }}
+  >
+    {/* Feature Cards */}
+    {[
+      {
+        title: "AI Chatbot (Chill Guy)",
+        description:
+          "Talk with chill guy and maximize your charisma with girls through iconic pick-up lines and witty conversations.",
+        icon: "/chillguypfp.png",
+      },
+      {
+        title: "Master Rizz Strategies",
+        description:
+          "Learn proven strategies to master the art of charm and style effortlessly, become a huzz magnet.",
+        icon: "/duke.png",
+        audio: "/rizz.mp3",
+      },
+      {
+        title: "Confidence Booster",
+        description: "Get the best tips and tricks to boost your confidence in social situations.",
+        icon: "/boost.png",
+      },
+    ].map((feature, index) => (
+      <Box
+        key={index}
+        sx={{
+          backgroundColor: "#FFFFFF",
+          borderRadius: "12px",
+          padding: 4,
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
+          "&:hover": {
+            transform: "scale(1.05)",
+            transition: "all 0.3s ease",
+            boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.4)",
+          },
+        }}
+        onMouseEnter={() => {
+          if (feature.audio) {
+            const audio = new Audio(feature.audio);
+            audio.play();
+          }
+        }}
+      >
+        <Image
+          src={feature.icon}
+          alt={feature.title}
+          width={64}
+          height={64}
+          style={{ margin: "0 auto", marginBottom: "16px" }}
+        />
         <Typography
-          variant="h2"
+          variant="h5"
           sx={{
-            fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
+            fontSize: "1.2rem",
             fontWeight: "bold",
-            color: "white",
-            mb: 6,
+            color: "#333333",
+            mb: 2,
           }}
         >
-          Features
+          {feature.title}
         </Typography>
-        <Box
+        <Typography
+          variant="body1"
           sx={{
-            maxWidth: "1200px",
-            margin: "0 auto", 
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
-            gap: 4,
-            px: { xs: 2, md: 4 },
+            fontSize: "0.9rem",
+            color: "#666666",
           }}
         >
-          {/* Feature Cards */}
-          {[
-            {
-              title: "AI Chatbot (Chill Guy)",
-              description: "Talk with chill guy and maximize your charisma with girls through iconic pick-up lines and witty conversations.",
-              icon: "/chillguypfp.png",
-            },
-            {
-              title: "Confidence Booster",
-              description: "Get the best tips and tricks to boost your confidence in social situations.",
-              icon: "/boost.png",
-            },
-            {
-              title: "Master Rizz Strategies",
-              description: "Learn proven strategies to master the art of charm and style effortlessly, become a huzz magnet.",
-              icon: "/duke.png",
-            },
-          ].map((feature, index) => (
-            <Box
-              key={index}
-              sx={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "12px",
-                padding: 4,
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
-                "&:hover": {
-                  transform: "scale(1.05)",
-                  transition: "all 0.3s ease",
-                  boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.4)",
-                },
-              }}
-            >
-              <Image
-                src={feature.icon}
-                alt={feature.title}
-                width={64}
-                height={64}
-                style={{ margin: "0 auto", marginBottom: "16px" }}
-              />
-              <Typography
-                variant="h5"
-                sx={{
-                  fontSize: "1.2rem",
-                  fontWeight: "bold",
-                  color: "#333333",
-                  mb: 2,
-                }}
-              >
-                {feature.title}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: "0.9rem",
-                  color: "#666666",
-                }}
-              >
-                {feature.description}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
+          {feature.description}
+        </Typography>
       </Box>
+    ))}
+  </Box>
+</Box>
+
 
       </Box>
 
@@ -253,9 +396,10 @@ export default function Home() {
       className="text-3xl font-semibold tracking-tight text-white-900 sm:text-4xl lg:text-5xl"
       style={{ textAlign: "center" }}
       >
-        If you're a chill guy, I suggest you sign up... you don't wanna be like this guy.
+        If you're a chill guy, I suggest you start chatting... you don't wanna be like this guy.
       </h2>
-      <Box
+        <br></br>
+        <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -271,6 +415,35 @@ export default function Home() {
           style={{ borderRadius: "50%", animation: "bounce 2s infinite" }}
         />
       </Box>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          sx={{ 
+            mt: 2, 
+            fontSize: { xs: '1rem', sm: '1.2rem' }, 
+            fontWeight: '500', 
+            fontFamily: 'Inter',
+            backgroundColor: 'white', 
+            color: 'black', 
+            animation: 'slideUp 4s ease-in-out',
+            textTransform: 'none', 
+            borderRadius: 2,
+            maxWidth: '300px',
+            maxLength: '100px',
+            mx: 'auto',
+            alignItems: 'center',
+            px: 4,
+            '&:hover': { 
+              transform: 'scale(1.05)', 
+              backgroundImage: 'linear-gradient(to bottom, #C0A252, black)', 
+              color: 'white'
+            }
+          }} 
+          href="/chat"
+        >
+          Talk with Chill Guy
+          <Image src={"/chillguy.png"} alt="Chill Guy" width={50} height={30} />
+        </Button>
       <br></br>
       <br></br>
       <br></br>

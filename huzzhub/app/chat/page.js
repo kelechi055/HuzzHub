@@ -19,7 +19,7 @@ import AudioPlayer from '@/components/AudioPlayer';
 const chillTheme = createTheme({
   palette: {
     primary: {
-      main: "#C0A252",
+      main: "#AF934B",
       light: "#D4B270",
       dark: "#9A842F",
       contrastText: "#FFFFFF",
@@ -155,7 +155,7 @@ export default function Home() {
         messages={messages}
       />
 
-      <Box
+<Box
         width="100%"
         height="100vh"
         display="flex"
@@ -164,7 +164,6 @@ export default function Home() {
         alignItems="center"
         sx={{ background: chillTheme.palette.gradients.primary }}
       >
-        {/* Menu Icon */}
         <IconButton
           onClick={() => setSidebarOpen(!sidebarOpen)}
           sx={{
@@ -176,48 +175,42 @@ export default function Home() {
         >
           <MenuIcon />
         </IconButton>
-        
-        {/* Chill Guy Music :) */}
+
         <AudioPlayer />
 
-        {/* Chat Interface */}
-        <Box display="flex" flexDirection="row" alignItems="center">
+        <Box
+          display="flex"
+          flexDirection={{ xs: "column", md: "row" }}
+          alignItems="center"
+        >
           <Box
             sx={{
-              height: 633,
-              width: 400,
-              marginRight: 2,
+              height: { xs: "200px", md: "633px" },
+              width: { xs: "100%", md: "400px" },
+              marginRight: { md: 2 },
               backgroundSize: "cover",
               backgroundImage: "url(/huzzhub-assistant-image.png)",
-              display: {
-                sm: "none",
-                md: "flex",
-              },
+              display: { xs: "none", md: "flex" },
             }}
-            display="flex"
             justifyContent="center"
             alignItems="center"
           />
           <Stack
-            //size of the chat box, etc...
             direction="column"
-            width="1200px"
-            height="600px"
+            width={{ xs: "90%", md: "1200px" }}
+            height={{ xs: "auto", md: "600px" }}
             p={2}
             spacing={2}
             sx={{ flexGrow: 1 }}
           >
-            {/* Section for Scrollable Messages */}
-            <Box
-              flexGrow={1}
-              overflow="auto"
-              sx={{ padding: "10px" }}
-            >
+            <Box flexGrow={1} overflow="auto" sx={{ padding: "10px" }}>
               {messages.map((msg, index) => (
                 <Box
                   key={index}
                   display="flex"
-                  justifyContent={msg.role === "assistant" ? "flex-start" : "flex-end"}
+                  justifyContent={
+                    msg.role === "assistant" ? "flex-start" : "flex-end"
+                  }
                   alignItems="center"
                   sx={{ marginBottom: 2 }}
                 >
@@ -235,7 +228,9 @@ export default function Home() {
                     />
                   )}
                   <Box
-                    bgcolor={msg.role === "assistant" ? "primary.main" : "secondary.main"}
+                    bgcolor={
+                      msg.role === "assistant" ? "primary.main" : "secondary.main"
+                    }
                     color={msg.role === "assistant" ? "white" : "#C0A252"}
                     borderRadius={7}
                     p={3}
@@ -247,7 +242,7 @@ export default function Home() {
                   >
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: marked(msg.content), // this just renders the different message content as markdown (bold, italics, etc.)
+                        __html: marked(msg.content),
                       }}
                     />
                   </Box>
@@ -256,11 +251,10 @@ export default function Home() {
               <div ref={messagesEndRef} />
             </Box>
 
-            {/* Input Section */}
             <Box
               component="form"
               onSubmit={(e) => {
-                e.preventDefault(); 
+                e.preventDefault();
                 sendMessage();
               }}
               display="flex"
@@ -284,29 +278,27 @@ export default function Home() {
                   },
                 }}
               />
-
-              {/* Send Button */}
               <Button
                 variant="contained"
                 type="submit"
                 sx={{
                   marginLeft: 1,
                   background: "linear-gradient(90deg, #C0A252, #91793E)",
-                  borderRadius: "30px", 
+                  borderRadius: "30px",
                   padding: "12px 24px",
-                  fontWeight: "550", 
+                  fontWeight: "550",
                   fontFamily: "'Poppins', sans-serif",
                   fontSize: "16px",
-                  textTransform: "none", 
-                  boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)", 
+                  textTransform: "none",
+                  boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
                   transition: "all 0.3s ease-in-out",
                   "&:hover": {
-                    background: "linear-gradient(90deg, #D4B270, #C0A252)", 
-                    boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.3)", 
+                    background: "linear-gradient(90deg, #D4B270, #C0A252)",
+                    boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.3)",
                     transform: "translateY(-4px)",
                   },
                   "&:active": {
-                    transform: "translateY(0)", 
+                    transform: "translateY(0)",
                     boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.2)",
                   },
                 }}
@@ -314,7 +306,6 @@ export default function Home() {
                 Send
               </Button>
             </Box>
-            {/* End of Input Section */}
           </Stack>
         </Box>
       </Box>

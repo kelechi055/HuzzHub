@@ -7,6 +7,19 @@
   --foreground: #171717;
 }
 
+
+@media (max-width: 600px) {
+  .ai-bubble {
+    background-color: lightblue !important; 
+    color: black !important; 
+  }
+}
+
+.ai-bubble {
+  background-color: var(--primary-main); 
+  color: white; 
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #C0A252;
