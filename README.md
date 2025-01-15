@@ -1,4 +1,4 @@
-# HuzzHub (brainrot jia.seed hackathon submission)
+# HuzzHub (brainrot jia.seed hackathon submission) - https://devpost.com/software/huzzhub-h52udq
 
 Welcome to **HuzzHub**, the ultimate meme-powered AI assistant platform! 
 
