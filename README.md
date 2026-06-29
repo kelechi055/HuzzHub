@@ -1,7 +1,7 @@
 > [!WARNING]
 > The chat feature is disabled due to API quota limits.
 
-# HuzzHub (brainrot jia.seed hackathon submission)
+# HuzzHub (brainrot jia.seed hackathon submission) - 🏆Track Winner
 
 Welcome to **HuzzHub**, the ultimate meme-powered AI assistant platform! 
 
